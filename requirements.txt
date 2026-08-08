@@ -1,0 +1,6 @@
+feedparser
+langchain
+langchain-huggingface
+transformers
+requests
+python-dotenv
