@@ -1,0 +1,37 @@
+name: Daily Bank News Digest
+
+# Run every day at 2:30 UTC (which is 8:00 AM IST)
+on:
+  schedule:
+    - cron: "30 2 * * *" 
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  fetch-and-send:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Check out your code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install feedparser requests python-dotenv
+
+      # 4. Run the script
+      - name: Run Bank News Agent
+        env:
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py
